@@ -9,6 +9,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+env:
+  AZURE_WEBAPP_NAME: rmou-gl-myfirstapp 
+  AZURE_WEBAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
 
 jobs:
   build:
@@ -18,7 +21,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Set up Python version
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
           python-version: '3.7'
 
@@ -31,6 +34,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip 
           pip install -r requirements.txt
+
+      - name: Building web app
+        uses: azure/appservice-build@v2
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
       

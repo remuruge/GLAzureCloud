@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 env:
   AZURE_WEBAPP_NAME: rmou-gl-myfirstapp 
-  AZURE_WEBAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: 'python-docs-hello-world' # set this to the path to your web app project, defaults to the repository root
 
 jobs:
   build:
@@ -20,20 +20,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Python version
+      - name: Set up Python version 3.7
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
-
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
       
       - name: Install dependencies
         run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           python -m pip install --upgrade pip 
-          pip install -r  ./python-docs-hello-world/requirements.txt
+          pip install -r  requirements.txt --target=".python_packages/lib/site-packages"
+          popd
 
       - name: Building web app
         uses: azure/appservice-build@v2
